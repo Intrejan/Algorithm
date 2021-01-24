@@ -1,9 +1,6 @@
 package leetCode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.Character.getNumericValue;
 
@@ -149,6 +146,32 @@ public class ArrayAndStringSolution {
             result.append(1);
         }
         return result.reverse().toString();
+    }
+
+    public int maxFreq(String s, int maxLetters, int minSize, int maxSize) {
+        Map<String,Integer> cache = new HashMap<>();
+        int max = 0;
+        for(int i=0;i<=s.length()-minSize;i++){
+            String temp = s.substring(i,i+minSize);
+            int count = cache.getOrDefault(temp,0);
+            cache.put(temp,count+1);
+        }
+
+        for(String temp:cache.keySet()){
+            int count = cache.get(temp);
+            if(check(temp,maxLetters) && count>max){
+                max = count;
+            }
+        }
+        return max;
+    }
+
+    private boolean check(String temp, int maxLetters) {
+        Set<Character> set = new HashSet<>();
+        for(char c:temp.toCharArray()){
+            set.add(c);
+        }
+        return set.size()<=maxLetters;
     }
 
     public static void main(String[] args){

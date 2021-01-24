@@ -193,10 +193,47 @@ public class DynamicSolution {
         return max;
     }
 
+    public boolean wordBreak(String s, List<String> wordDict) {
+        if(wordDict.isEmpty()){
+            return false;
+        }
+        int min = wordDict.get(0).length();
+        int max = wordDict.get(0).length();
+        for(String word:wordDict){
+            if(word.length()<min){
+                min = word.length();
+            }if(word.length()>max){
+                max = word.length();
+            }
+        }
+        Set<String> set= new HashSet<>(wordDict);
+        boolean[] booleans = new boolean[s.length()+1];
+        booleans[0] = true;
+        for(int i =0;i<=s.length()-min;i++){
+            for(int j = i+min; j<=i+max && j<=s.length(); j++){
+                if(set.contains(s.substring(i,j)) && booleans[i]){
+                    booleans[j] = true;
+                }
+            }
+        }
+        return booleans[s.length()];
+    }
 
+    public int climbStairs(int n) {
+        int p = 0;
+        int q = 0;
+        int r = 1;
+        for(int i =0;i<n;i++){
+            p = q;
+            q = r;
+            r = p+q;
+        }
+        return r;
+    }
 
     public static void main(String[] args){
         DynamicSolution dynamicSolution = new DynamicSolution();
 //        System.out.println(dynamicSolution.longestPalindrome2("babab"));
+//        dynamicSolution.wordBreak("applepenapple",Arrays.asList("apple", "pe"));
     }
 }
