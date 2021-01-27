@@ -1,6 +1,5 @@
 package myPattern;
 
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 线程安全的单例
@@ -28,7 +27,5 @@ public class Singleton {
     public static void main(String[] args){
         Singleton singleton = Singleton.getUniqueInstance();
         System.out.println(singleton.hashCode());
-        AtomicInteger atomicInteger = new AtomicInteger();
-        atomicInteger.set(5);
     }
 }

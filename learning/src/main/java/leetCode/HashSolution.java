@@ -4,7 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HashSolution {
-
+    /**
+     * 和可被 K 整除的子数组
+     * @param A 数组
+     * @param K K值
+     * @return 子数组个数
+     */
     public int subarraysDivByK(int[] A, int K) {
         //同余定理
         Map<Integer, Integer> record = new HashMap<>();
@@ -22,6 +27,12 @@ public class HashSolution {
         return answer;
     }
 
+    /**
+     * 和为 K 的子数组
+     * @param nums 数组
+     * @param k k
+     * @return 子数组个数
+     */
     public int subarraySum(int[] nums, int k) {
         Map<Integer,Integer> record = new HashMap<>();
         int count = 0;
@@ -29,10 +40,13 @@ public class HashSolution {
         //初始化，意味着当整个数组刚好满足条件时，前缀和-k=0的时候，可以的得到1
         record.put(0,1);
         for (int num : nums) {
+            //计算前缀和
             partialSum += num;
+            //查看记录中是否有满足和为k的子数组的前缀和记录
             if (record.containsKey(partialSum - k)) {
                 count += record.get(partialSum - k);
             }
+            //添加记录
             record.put(partialSum, record.getOrDefault(partialSum, 0) + 1);
         }
         return count;

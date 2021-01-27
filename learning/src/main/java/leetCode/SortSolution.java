@@ -1,7 +1,32 @@
 package leetCode;
 
 
+import java.util.*;
+
 public class SortSolution {
+    /**
+     * 合并区间
+     * @param intervals 区间组
+     * @return 合并后结果
+     */
+    public int[][] merge(int[][] intervals) {
+        if(intervals.length==0){
+            return new int[0][2];
+        }
+        Arrays.sort(intervals, Comparator.comparingInt(o -> o[0]));
+        List<int[]> result = new ArrayList<>();
+        for (int[] interval : intervals) {
+            int L = interval[0];
+            int R = interval[1];
+            if (result.size() == 0 || result.get(result.size() - 1)[1] < L) {
+                result.add(new int[]{L, R});
+            } else {
+                result.get(result.size() - 1)[1] = Math.max(result.get(result.size() - 1)[1], R);
+            }
+        }
+        return result.toArray(new int[result.size()][]);
+    }
+
     /**
      * 使用堆排序寻找第K大的元素
      * @param nums 目标数组
@@ -92,6 +117,38 @@ public class SortSolution {
         }
         nums[left] = temp;
         return left;
+    }
+
+    /**
+     * 出现频离最高的K个数
+     * @param nums 数组
+     * @param k K
+     * @return 结果
+     */
+    public int[] topKFrequent(int[] nums, int k) {
+        int[] result = new int[k];
+        Map<Integer,Integer>map = new HashMap<>();
+        for(int num:nums){
+            int count = map.getOrDefault(num,0);
+            map.put(num,count+1);
+        }
+        PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(o -> o[1]));
+        for(Map.Entry<Integer, Integer> entry:map.entrySet()){
+            int num = entry.getKey();
+            int count = entry.getValue();
+            if(queue.size()<k){
+                queue.offer(new int[]{num,count});
+            }else {
+                if(queue.peek()!=null && queue.peek()[1]<count){
+                    queue.poll();
+                    queue.offer(new int[]{num,count});
+                }
+            }
+        }
+        for(int i=0;i<k;i++){
+            result[i] = Objects.requireNonNull(queue.poll())[0];
+        }
+        return result;
     }
 
     public static void main(String[] args){

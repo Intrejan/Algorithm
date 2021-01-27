@@ -1,8 +1,10 @@
+import java.util.Arrays;
+
 public class BinarySearch {
 
     public static void main(String[] args) {
         int[] arr = {5, 12, 23, 43, 66, 98, 100};
-        System.out.println(binarySearch(arr, 23));
+        System.out.println(binarySearch(arr, 5));
     }
 
     /**

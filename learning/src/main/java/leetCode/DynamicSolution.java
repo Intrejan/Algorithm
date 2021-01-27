@@ -4,7 +4,11 @@ package leetCode;
 import java.util.*;
 
 public class DynamicSolution {
-
+    /**
+     * 最长回文子串
+     * @param s 字符串
+     * @return 子串
+     */
     public String longestPalindrome(String s) {
         int len = s.length();
         StringBuilder str = new StringBuilder();
@@ -92,6 +96,11 @@ public class DynamicSolution {
         return maxSum;
     }
 
+    /**
+     * 接雨水
+     * @param height 高度数组
+     * @return 雨水值
+     */
     public int trap(int[] height) {
         int len = height.length;
         if(len <1){
@@ -121,6 +130,9 @@ public class DynamicSolution {
         return sum;
     }
 
+    /**
+     * 使用栈解答
+     */
     public int trapByStack(int[] height) {
         int ans = 0, current = 0;
         Deque<Integer> stack = new LinkedList<>();
@@ -138,6 +150,9 @@ public class DynamicSolution {
         return ans;
     }
 
+    /**
+     * 使用双指针解答
+     */
     public int trapByTwoPointer(int[] height){
         int result = 0;
         int left = 0;
@@ -164,6 +179,11 @@ public class DynamicSolution {
         return result;
     }
 
+    /**
+     * 最佳观光组合
+     * @param A 评分数组
+     * @return 最佳组合
+     */
     public int maxScoreSightseeingPair(int[] A) {
         int max = A[0];
         int result = 0;
@@ -178,6 +198,11 @@ public class DynamicSolution {
         return  result;
     }
 
+    /**
+     * 买卖股票的最佳时机
+     * @param prices 价格数组
+     * @return 最佳时机
+     */
     public int maxProfit(int[] prices) {
         int min = Integer.MAX_VALUE;
         int max = 0;
@@ -193,10 +218,17 @@ public class DynamicSolution {
         return max;
     }
 
+    /**
+     * 单词拆分
+     * @param s 字符串
+     * @param wordDict 字典
+     * @return 能否拆分
+     */
     public boolean wordBreak(String s, List<String> wordDict) {
         if(wordDict.isEmpty()){
             return false;
         }
+        //计算出单词的最长长度和最短长度
         int min = wordDict.get(0).length();
         int max = wordDict.get(0).length();
         for(String word:wordDict){
@@ -206,7 +238,9 @@ public class DynamicSolution {
                 max = word.length();
             }
         }
+        //将字典转化为集合
         Set<String> set= new HashSet<>(wordDict);
+        //每个位置是否满足
         boolean[] booleans = new boolean[s.length()+1];
         booleans[0] = true;
         for(int i =0;i<=s.length()-min;i++){
@@ -219,6 +253,11 @@ public class DynamicSolution {
         return booleans[s.length()];
     }
 
+    /**
+     * 爬楼梯（滚动数组）
+     * @param n 阶数
+     * @return 不同爬法
+     */
     public int climbStairs(int n) {
         int p = 0;
         int q = 0;

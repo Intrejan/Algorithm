@@ -3,16 +3,25 @@ package leetCode;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * LRU缓存机制
+ */
 public class LRUCache {
-
+    //当前容量
     private int size;
+    //最大容量
     private int capacity;
+    //开始节点
     private LinkNode head;
+    //最终节点
     private LinkNode tail;
+    //缓存哈希map
     private Map<Integer,LinkNode> cache = new HashMap<>();
 
+    //初始化，参数为最大容量
     public LRUCache(int capacity) {
         this.capacity = capacity;
+        //当前容量为0
         this.size = 0;
         this.head = new LinkNode();
         this.tail = new LinkNode();
