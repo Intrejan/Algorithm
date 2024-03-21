@@ -129,5 +129,35 @@ public class Test {
         array[index2] = temp;
     }
 
+    public static int trap(int[] height) {
+        int left = 0;
+        int right = height.length - 1;
+        int h_l = height[0];
+        int h_r = height[right];
+        int sum = 0;
+        while (left < right) {
+            if (h_l < h_r) {
+                if (height[left + 1] < h_l) {
+                    sum += h_l - height[left + 1];
+                } else {
+                    h_l = height[left + 1];
+                }
+                left++;
+            } else {
+                if (height[right - 1] < h_r) {
+                    sum += h_r - height[right - 1];
+                } else {
+                    h_r = height[right - 1];
+                }
+                right--;
+            }
+        }
+        return sum;
+    }
+
+    public static void main(String[] args) {
+        int[] height = {0,1,0,2,1,0,1,3,2,1,2,1};
+        System.out.println(trap(height));
+    }
 
 }
