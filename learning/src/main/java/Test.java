@@ -1,6 +1,9 @@
-import static mySort.HeapSort.swap;
-
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Test {
 
@@ -251,11 +254,151 @@ public class Test {
         return sum;
     }
 
+    public static int romanToInt(String s) {
+        Map<String, Integer> map = new HashMap<>() {{
+            this.put("I", 1);
+            this.put("V", 5);
+            this.put("X", 10);
+            this.put("L", 50);
+            this.put("C", 100);
+            this.put("D", 500);
+            this.put("M", 1000);
+        }};
+        int sum = 0;
+        for (int i = 0; i < s.length(); i++) {
+            int value = map.get(String.valueOf(s.charAt(i)));
+            if (i < s.length() - 1 && value < map.get(String.valueOf(s.charAt(i + 1)))) {
+                sum -= value;
+            } else {
+                sum += value;
+            }
+        }
+        return sum;
+    }
+
+    public static String intToRoman(int num) {
+        Map<Integer, String> map = new HashMap<>() {
+            {
+                this.put(1, "I");
+                this.put(4, "IV");
+                this.put(5, "V");
+                this.put(9, "IX");
+                this.put(10, "X");
+                this.put(40, "XL");
+                this.put(50, "L");
+                this.put(90, "XC");
+                this.put(100, "C");
+                this.put(400, "CD");
+                this.put(500, "D");
+                this.put(900, "CM");
+                this.put(1000, "M");
+            }
+        };
+        List<Integer> values = map.keySet().stream().sorted(Comparator.reverseOrder()).toList();
+        StringBuilder result = new StringBuilder();
+        for (int value : values) {
+            while (num >= value) {
+                result.append(map.get(value));
+                num -= value;
+            }
+        }
+        return result.toString();
+    }
+
+    public int lengthOfLastWord(String s) {
+        int l = 0;
+        char[] chars = s.toCharArray();
+        for (int i = s.length() - 1; i >= 0; i--) {
+            if (chars[i] == ' ') {
+                if (l == 0) {
+                    continue;
+                } else {
+                    break;
+                }
+            }
+            l++;
+        }
+        return l;
+    }
+
+    public static String longestCommonPrefix(String[] strs) {
+        String base = strs[0];
+        int end;
+        for (int i = 0; i < base.length(); i++) {
+            char c = base.charAt(i);
+            for (int j = 1; j < strs.length; j++) {
+                end = i;
+                String temp = strs[j];
+                if (temp.length() <= i) {
+                    return base.substring(0, end);
+                }
+                if (temp.charAt(i) != c) {
+                    return base.substring(0, end);
+                }
+            }
+        }
+        return strs[0];
+    }
+
+    public static String reverseWords(String s) {
+        List<String> words = Arrays.stream(s.split(" ")).
+            filter(word -> !word.isEmpty()).toList();
+        StringBuilder result = new StringBuilder();
+        for (int i = words.size() - 1; i >= 0; i--) {
+            result.append(words.get(i));
+            result.append(" ");
+        }
+        return result.toString();
+    }
+
+    public static String convert(String s, int numRows) {
+        if (numRows == 1) {
+            return s;
+        }
+        int index = 0;
+
+        char[][] matrix = new char[numRows][s.length()];
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < s.length(); j++) {
+                matrix[i][j] = ' ';
+            }
+        }
+        while (index < s.length()) {
+            for (int j = 0; j < s.length(); j++) {
+                for (int i = 0; i < numRows; i++) {
+                    if (j % (numRows - 1) == 0) {
+                        if (index >= s.length()) {
+                            break;
+                        }
+                        matrix[i][j] = s.charAt(index);
+                        index++;
+                    } else {
+                        if (i + (j % (numRows - 1)) == numRows - 1) {
+                            if (index >= s.length()) {
+                                break;
+                            }
+                            matrix[i][j] = s.charAt(index);
+                            index++;
+                        }
+                    }
+                }
+            }
+        }
+
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < s.length(); j++) {
+                if (matrix[i][j] != ' ') {
+                    result.append(matrix[i][j]);
+                }
+            }
+        }
+        return result.toString();
+    }
+
+
     public static void main(String[] args) {
-        int[] ratings = {0,1,2,5,3,2,7};
-        System.out.println(candy(ratings));
-        int[] ratings1 = {1,2,2};
-        System.out.println(candy(ratings1));
+        System.out.println(convert("PAYPALISHIRING", 3));
     }
 
 }
