@@ -396,9 +396,92 @@ public class Test {
         return result.toString();
     }
 
+    public static int strStr(String haystack, String needle) {
+        int index = 0;
+        int step = needle.length();
+        while (index <= haystack.length() - step) {
+            if (haystack.substring(index, index + step).equals(needle)) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
+    public static List<String> test(String[] words, int maxWidth) {
+        List<String> result = new ArrayList<>();
+        StringBuilder temp = new StringBuilder();
+        for (int i = 0; i < words.length; i++) {
+            String s = words[i];
+            if (temp.length() + s.length() > maxWidth) {
+                result.add(temp.toString());
+                temp = new StringBuilder(s + " ");
+            } else {
+                temp.append(s).append(" ");
+            }
+            if (i == words.length - 1) {
+                result.add(temp.toString());
+            }
+        }
+        for (int i = 0; i < result.size() - 1; i++) {
+            String line = buildLine(result.get(i), maxWidth);
+            result.set(i, line);
+        }
+        String lastLine = buildLine(result.get(result.size() - 1), result.get(result.size() - 1).trim().length());
+        if (lastLine.length() < maxWidth) {
+            lastLine += " ".repeat(Math.max(0, maxWidth - lastLine.length()));
+        }
+        result.set(result.size() - 1, lastLine);
+        return result;
+    }
+
+    private static String buildLine(String line, int maxWidth) {
+        String[] words = line.split(" ");
+        int sum = 0;
+        for (String word : words) {
+            sum += word.length();
+        }
+        int space = maxWidth - sum;
+        int gap;
+        int average;
+        int remain = 0;
+        List<String> result = new ArrayList<>();
+        if (words.length > 1) {
+            gap = words.length - 1;
+            average = space / gap;
+            remain = space % gap;
+            for (int i = 0; i < words.length - 1; i++) {
+                result.add(words[i]);
+                result.add(" ".repeat(Math.max(0, average)));
+            }
+            result.add(words[words.length - 1]);
+        } else {
+            result.add(words[0]);
+            result.add(" ".repeat(Math.max(0, space)));
+        }
+        for (int i = 0; i < result.size(); i++) {
+            String c = result.get(i);
+            if (c.startsWith(" ")) {
+                if (remain == 0) {
+                    break;
+                }
+                result.set(i, c + " ");
+                remain--;
+            }
+        }
+        StringBuilder res = new StringBuilder();
+        for (String s : result) {
+            res.append(s);
+        }
+        return res.toString();
+    }
 
     public static void main(String[] args) {
-        System.out.println(convert("PAYPALISHIRING", 3));
+//        System.out.println(test(new String[]{"This", "is", "an", "example", "of", "text", "justification."}, 16));
+        System.out.println(test(new String[]{"What", "must", "be", "acknowledgment", "shall", "be"}, 16));
+//        System.out.println(
+//            test(new String[]{"Science", "is", "what", "we", "understand", "well", "enough", "to", "explain",
+//                "to", "a", "computer.", "Art", "is", "everything", "else", "we", "do"}, 20));
     }
 
 }
