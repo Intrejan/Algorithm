@@ -241,12 +241,134 @@ public class ArrayAndStringSolution {
         return step;
     }
 
+    public static boolean isPalindrome(String s) {
+        int l = s.length();
+        s = s.toUpperCase();
+        int left = 0;
+        int right = l - 1;
+        while (left < right) {
+            char lc = s.charAt(left);
+            char rc = s.charAt(right);
+            if (!Character.isLetter(lc) && !Character.isDigit(lc)) {
+                left++;
+            } else if (!Character.isLetter(rc) && !Character.isDigit(rc)) {
+                right--;
+            } else {
+                if (lc != rc) {
+                    return false;
+                }
+                left++;
+                right--;
+            }
+        }
+        return true;
+    }
+
+    public static int[] twoSum(int[] numbers, int target) {
+        int l = numbers.length;
+        int left = target - numbers[0];
+        int right = target - numbers[l - 1];
+        int i = 0;
+        int j = l - 1;
+        while (i < j) {
+            int sum = numbers[i] + numbers[j];
+            if (sum == target) {
+                return new int[]{i + 1, j + 1};
+            } else if (sum > target) {
+                j--;
+            } else {
+                i++;
+            }
+        }
+        return new int[]{i + 1, j + 1};
+    }
+
+    public static int maxArea(int[] height) {
+        int left = 0;
+        int right = height.length - 1;
+        int maxSize = 0;
+        while (left < right) {
+            int currentSize = Math.min(height[left], height[right]) * (right - left);
+            maxSize = Math.max(currentSize, maxSize);
+            if (height[left] < height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        return maxSize;
+    }
+
+    public static List<List<Integer>> test(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (set.contains(nums[i])) {
+                continue;
+            }
+            List<Integer[]> temp = getResult(nums[i], nums, i);
+            set.add(nums[i]);
+            for (Integer[] integers : temp) {
+                List<Integer> list = new ArrayList<>();
+                list.add(nums[i]);
+                list.add(integers[0]);
+                list.add(integers[1]);
+                result.add(list);
+            }
+        }
+        return result;
+    }
+
+    public static List<Integer[]> getResult(int sum, int[] nums, int index) {
+        int left = index + 1;
+        int right = nums.length - 1;
+        List<Integer[]> result = new ArrayList<>();
+        while (left < right) {
+            if (nums[left] == nums[left - 1] && left > index + 1) {
+                left++;
+                continue;
+            }
+            int currentSum = nums[left] + nums[right];
+            if ((currentSum + sum) == 0) {
+                result.add(new Integer[]{nums[left], nums[right]});
+                left++;
+                right--;
+            } else if (currentSum + sum > 0) {
+                right--;
+            } else {
+                left++;
+            }
+        }
+        return result;
+    }
+
+    public static int minSubArrayLen(int target, int[] nums) {
+        int min = Integer.MAX_VALUE;
+        int left = 0, right = 0;
+        int curr = 0;
+        while (left < nums.length) {
+            if (left == right) {
+                curr = nums[left];
+            }
+            if (curr < target) {
+                if (right < nums.length - 1) {
+                    right++;
+                    curr += nums[right];
+                } else {
+                    break;
+                }
+            } else {
+                min = Math.min(min, right - left + 1);
+                curr -= nums[left];
+                left ++;
+            }
+        }
+        return min == Integer.MAX_VALUE ? 0 : min;
+    }
     public static void main(String[] args) {
-        ArrayAndStringSolution solution = new ArrayAndStringSolution();
-//        System.out.println(solution.addStrings("1234","9545"));
-//        int[] nums1 = {1,2,4};
-//        int[] nums2 = {3,5,7};
-//        System.out.println(solution.findMedianSortedArrays(nums1,nums2));
-//        System.out.println(solution.lengthOfLongestSubstring("asdgadfgf"));
+        System.out.println(minSubArrayLen(7, new int[]{2,3,1,2,4,3}));
+        System.out.println(minSubArrayLen(4, new int[]{1,4,4}));
+        System.out.println(minSubArrayLen(11, new int[]{1,1,1,1,1,1,1,1}));
     }
 }
