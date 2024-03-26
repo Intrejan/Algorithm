@@ -432,10 +432,47 @@ public class ArrayAndStringSolution {
         return result;
     }
 
+    public static String minWindow(String s, String t) {
+        int left = 0;
+        int right = -1;
+        Map<Character, Integer> cache = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            cache.put(c, cache.getOrDefault(c, 0) + 1);
+        }
+        Map<Character, Integer> temp = new HashMap<>(cache);
+        int min = Integer.MAX_VALUE;
+        String result = "";
+        while (right < s.length()) {
+            while (!checkEmpty(temp)) {
+                right ++;
+                if (right == s.length()) {
+                    break;
+                }
+                char c = s.charAt(right);
+                if (temp.containsKey(c)) {
+                    temp.put(c, temp.get(c) - 1);
+                }
+            }
+            while (checkEmpty(temp)) {
+                if (right - left < min) {
+                    min = right - left;
+                    result = s.substring(left, right + 1);
+                }
+                char c = s.charAt(left);
+                if (temp.containsKey(c)) {
+                    temp.put(c, temp.get(c) + 1);
+                }
+                left++;
+            }
+        }
+        return result;
+    }
+
+    private static boolean checkEmpty(Map<Character, Integer> temp) {
+        return temp.values().stream().allMatch(v -> v <= 0);
+    }
+
     public static void main(String[] args) {
-        System.out.println(findSubstring("aaaaaaaaaaaaaa", new String[]{"aa"}));
-        System.out.println(findSubstring("wordgoodgoodgoodbestword", new String[]{"word", "good", "best", "word"}));
-        System.out.println(findSubstring("barfoofoobarthefoobarman", new String[]{"bar", "foo", "the"}));
-        System.out.println(findSubstring("wordgoodgoodgoodbestword", new String[]{"word", "good", "best", "good"}));
+        System.out.println(minWindow("ADOBECODEBANC", "ABC"));
     }
 }
