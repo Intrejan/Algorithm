@@ -361,14 +361,81 @@ public class ArrayAndStringSolution {
             } else {
                 min = Math.min(min, right - left + 1);
                 curr -= nums[left];
-                left ++;
+                left++;
             }
         }
         return min == Integer.MAX_VALUE ? 0 : min;
     }
+
+    public static int lengthOfLongestSubstring2(String s) {
+        char[] array = s.toCharArray();
+        int l = array.length;
+        int left = 0;
+        int right = 0;
+        int max = 0;
+        Set<Character> set = new HashSet<>();
+        while (right < l) {
+            if (left < right) {
+                set.remove(array[left]);
+                left++;
+            }
+            while (!set.contains(array[right])) {
+                set.add(array[right]);
+                max = Math.max(max, set.size());
+                right++;
+                if (right == l) {
+                    break;
+                }
+            }
+        }
+        return max;
+    }
+
+    public static List<Integer> findSubstring(String s, String[] words) {
+        List<Integer> result = new ArrayList<>();
+        int wordLength = words[0].length();
+        int wordCount = words.length;
+        int totalLength = wordLength * wordCount;
+        Map<String, Integer> cache = new HashMap<>();
+        for (String word : words) {
+            cache.put(word, cache.getOrDefault(word, 0) + 1);
+        }
+        for (int i = 0; i <= s.length() - totalLength; i++) {
+            int left = i;
+            int right = i;
+            Map<String, Integer> temp = new HashMap<>(cache);
+            while (left <= s.length() - totalLength) {
+                int r = Math.min(right + wordLength, s.length());
+                String word = s.substring(right, r);
+//                System.out.println(left + " " + right + " " + word + " " + temp);
+                if (right - left > totalLength) {
+                    String leftWord = s.substring(left, left + wordLength);
+                    temp.put(leftWord, temp.getOrDefault(leftWord, 0) + 1);
+                    left += wordLength;
+                }
+                if (!temp.containsKey(word)) {
+                    break;
+                } else {
+                    temp.put(word, temp.get(word) - 1);
+                    if (temp.get(word) == 0) {
+                        temp.remove(word);
+                    }
+                }
+                if (right < s.length() - wordLength) {
+                    right += wordLength;
+                }
+                if (temp.isEmpty()) {
+                    result.add(i);
+                }
+            }
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
-        System.out.println(minSubArrayLen(7, new int[]{2,3,1,2,4,3}));
-        System.out.println(minSubArrayLen(4, new int[]{1,4,4}));
-        System.out.println(minSubArrayLen(11, new int[]{1,1,1,1,1,1,1,1}));
+        System.out.println(findSubstring("aaaaaaaaaaaaaa", new String[]{"aa"}));
+        System.out.println(findSubstring("wordgoodgoodgoodbestword", new String[]{"word", "good", "best", "word"}));
+        System.out.println(findSubstring("barfoofoobarthefoobarman", new String[]{"bar", "foo", "the"}));
+        System.out.println(findSubstring("wordgoodgoodgoodbestword", new String[]{"word", "good", "best", "good"}));
     }
 }
