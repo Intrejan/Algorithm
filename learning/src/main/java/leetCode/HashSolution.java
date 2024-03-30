@@ -2,6 +2,7 @@ package leetCode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -237,7 +238,85 @@ public class HashSolution {
         }
         return subSet;
     }
+
+    public static List<String> summaryRanges(int[] nums) {
+        int index = 0;
+        List<String> result = new ArrayList<>();
+        while (index < nums.length) {
+            int num = nums[index];
+            int next = num + 1;
+            while (index + 1 < nums.length && nums[index + 1] == next) {
+                index++;
+                next++;
+            }
+            if (next == num + 1) {
+                result.add(String.valueOf(num));
+            } else {
+                result.add(num + "->" + (next - 1));
+            }
+            index++;
+        }
+        return result;
+    }
+
+    public static int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, Comparator.comparingInt(a -> a[0]));
+        List<int[]> result = new ArrayList<>();
+        for (int[] interval : intervals) {
+            mergeInt(interval, result);
+        }
+        return result.toArray(new int[0][]);
+    }
+
+    public static int[][] insert(int[][] intervals, int[] newInterval) {
+        List<int[]> result = new ArrayList<>();
+        boolean used = false;
+        if (intervals.length == 0 || newInterval[0] <= intervals[0][0]) {
+            used = true;
+            result.add(newInterval);
+        }
+        for (int[] interval : intervals) {
+            if (!used && newInterval[0] <= interval[0]) {
+                mergeInt(newInterval, result);
+                used = true;
+            }
+            mergeInt(interval, result);
+        }
+        if (!used) {
+            mergeInt(newInterval, result);
+        }
+        return result.toArray(new int[0][]);
+    }
+
+    private static void mergeInt(int[] newInterval, List<int[]> result) {
+        if (result.isEmpty() || result.get(result.size() - 1)[1] < newInterval[0]) {
+            result.add(newInterval);
+        } else {
+            result.get(result.size() - 1)[1] = Math.max(result.get(result.size() - 1)[1], newInterval[1]);
+        }
+    }
+
+    public static int findMinArrowShots(int[][] points) {
+        List<int[]> result = new ArrayList<>();
+        Arrays.sort(points, Comparator.comparingInt(point -> point[0]));
+        for (int i = 0; i < points.length; i++) {
+            if (result.isEmpty()) {
+                result.add(points[i]);
+                continue;
+            }
+            int[] curr = result.get(result.size() - 1);
+            if (points[i][0] > curr[1]) {
+                result.add(points[i]);
+            } else {
+                int[] last = result.get(result.size() - 1);
+                last[0] = points[i][0];
+                last[1] = Math.min(points[i][1], last[1]);
+            }
+        }
+        return result.size();
+    }
+
     public static void main(String[] args) {
-        System.out.println(longestConsecutive(new int[]{100, 4, 200, 1, 3, 2}));
+        System.out.println(findMinArrowShots(new int[][]{{10, 16}, {2, 8}, {1, 6}, {7, 12}}));
     }
 }
