@@ -299,18 +299,18 @@ public class HashSolution {
     public static int findMinArrowShots(int[][] points) {
         List<int[]> result = new ArrayList<>();
         Arrays.sort(points, Comparator.comparingInt(point -> point[0]));
-        for (int i = 0; i < points.length; i++) {
+        for (int[] point : points) {
             if (result.isEmpty()) {
-                result.add(points[i]);
+                result.add(point);
                 continue;
             }
             int[] curr = result.get(result.size() - 1);
-            if (points[i][0] > curr[1]) {
-                result.add(points[i]);
+            if (point[0] > curr[1]) {
+                result.add(point);
             } else {
                 int[] last = result.get(result.size() - 1);
-                last[0] = points[i][0];
-                last[1] = Math.min(points[i][1], last[1]);
+                last[0] = point[0];
+                last[1] = Math.min(point[1], last[1]);
             }
         }
         return result.size();
