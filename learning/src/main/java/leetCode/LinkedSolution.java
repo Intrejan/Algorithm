@@ -147,30 +147,22 @@ public class LinkedSolution {
      * @return 和
      */
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        ListNode head = null, tail = null;
-        int carry = 0;
-        while (l1 != null || l2 != null) {
-            int n1 = l1 != null ? l1.val : 0;
-            int n2 = l2 != null ? l2.val : 0;
-            int sum = n1 + n2 + carry;
-            if (head == null) {
-                head = tail = new ListNode(sum % 10);
-            } else {
-                tail.next = new ListNode(sum % 10);
-                tail = tail.next;
-            }
-            carry = sum / 10;
-            if (l1 != null) {
-                l1 = l1.next;
-            }
-            if (l2 != null) {
-                l2 = l2.next;
-            }
+        ListNode pre = new ListNode();
+        ListNode p1 = l1;
+        ListNode p2 = l2;
+        ListNode p3 = pre;
+        int addition = 0;
+        while (p1 != null || p2 != null || addition > 0) {
+            int c1 = p1 == null ? 0 : p1.val;
+            int c2 = p2 == null ? 0 : p2.val;
+            int curr_sum = (c1 + c2 + addition) % 10;
+            addition = (c1 + c2 + addition) / 10;
+            p3.next = new ListNode(curr_sum);
+            p3 = p3.next;
+            p1 = p1 == null ? null : p1.next;
+            p2 = p2 == null ? null : p2.next;
         }
-        if (carry > 0) {
-            tail.next = new ListNode(carry);
-        }
-        return head;
+        return pre.next;
     }
 
     public static void main(String[] args) {
