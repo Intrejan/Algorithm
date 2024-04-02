@@ -165,6 +165,61 @@ public class LinkedSolution {
         return pre.next;
     }
 
+    public static ListNode mergeTwoLists2(ListNode list1, ListNode list2) {
+        ListNode pre = new ListNode();
+        ListNode l1 = list1;
+        ListNode l2 = list2;
+        ListNode l3 = pre;
+        while (l1 != null || l2 != null) {
+            if (l1 == null) {
+                l3.next = l2;
+                l2 = l2.next;
+            } else if (l2 == null) {
+                l3.next = l1;
+                l1 = l1.next;
+            } else {
+                if (l1.val < l2.val) {
+                    l3.next = l1;
+                    l1 = l1.next;
+                } else {
+                    l3.next = l2;
+                    l2 = l2.next;
+                }
+            }
+            l3 = l3.next;
+        }
+        return pre.next;
+    }
+
+    public static Node copyRandomList(Node head) {
+        Map<Node, Node> map = new HashMap<>();
+        Node node = new Node(0);
+        Node pre = node;
+        Node curr = head;
+        while (curr != null) {
+            Node n = new Node(curr.val);
+            map.put(curr, n);
+            node.next = n;
+            node = node.next;
+            curr = curr.next;
+        }
+        node = pre.next;
+        curr = head;
+        while (node != null) {
+            if (curr.random == null) {
+                node.random = null;
+            } else {
+                node.random = map.get(curr.random);
+            }
+            node = node.next;
+            curr = curr.next;
+        }
+        return pre.next;
+    }
+
+//    public static ListNode reverseBetween(ListNode head, int left, int right) {
+//
+//    }
     public static void main(String[] args) {
         LinkedSolution linkedSolution = new LinkedSolution();
         //System.out.println(linkedSolution.generateParenthesis(2));
@@ -186,5 +241,18 @@ class ListNode {
     ListNode(int val, ListNode next) {
         this.val = val;
         this.next = next;
+    }
+}
+
+class Node {
+
+    int val;
+    Node next;
+    Node random;
+
+    public Node(int val) {
+        this.val = val;
+        this.next = null;
+        this.random = null;
     }
 }
