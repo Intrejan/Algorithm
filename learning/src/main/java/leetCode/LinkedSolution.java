@@ -244,18 +244,109 @@ public class LinkedSolution {
         return curr;
     }
 
+    public static ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode start = new ListNode();
+        start.next = head;
+        ListNode curr = head;
+        Map<Integer, ListNode> map = new HashMap<>();
+        map.put(0, start);
+        int index = 1;
+        while (curr != null) {
+            map.put(index, curr);
+            index++;
+            curr = curr.next;
+        }
+        index--;
+        map.get(index - n).next = map.get(index - n + 1) == null ? null : map.get(index - n + 1).next;
+        return start.next;
+    }
+
+    public static ListNode rotateRight(ListNode head, int k) {
+        ListNode curr = head;
+        int length = 0;
+        while (curr != null) {
+            length++;
+            if (curr.next == null) {
+                curr.next = head;
+                break;
+            }
+            curr = curr.next;
+        }
+        k = length == 0 ? 0 : k % length;
+        curr = new ListNode();
+        curr.next = head;
+        for (int i = 0; i < length - k; i++) {
+            curr = curr.next;
+        }
+        head = curr.next;
+        curr.next = null;
+        return head;
+    }
+
+    public static ListNode deleteDuplicates(ListNode head) {
+        Stack<ListNode> stack = new Stack<>();
+        ListNode curr = head;
+        while (curr != null) {
+            stack.push(curr);
+            curr = curr.next;
+        }
+        head = null;
+        ListNode next = null;
+        while (!stack.isEmpty()) {
+            ListNode node = stack.pop();
+            if (stack.isEmpty()) {
+                node.next = next;
+                head = node;
+                break;
+            }
+            if (stack.peek().val != node.val) {
+                node.next = next;
+                next = node;
+                head = node;
+                continue;
+            }
+            while (!stack.isEmpty() && stack.peek().val == node.val) {
+                stack.pop();
+            }
+        }
+        return head;
+    }
+
+    public static ListNode partition(ListNode head, int x) {
+        ListNode curr = head;
+        ListNode c1 = new ListNode();
+        ListNode c2 = new ListNode();
+        ListNode h1 = c1;
+        ListNode h2 = c2;
+        while (curr != null) {
+            if (curr.val < x) {
+                c1.next = curr;
+                c1 = c1.next;
+            } else {
+                c2.next = curr;
+                c2 = c2.next;
+            }
+            curr = curr.next;
+        }
+        c1.next = h2.next;
+        c2.next = null;
+        return h1.next;
+    }
+
     public static void main(String[] args) {
         ListNode n1 = new ListNode(1);
-        ListNode n2 = new ListNode(2);
+        ListNode n2 = new ListNode(4);
         ListNode n3 = new ListNode(3);
-        ListNode n4 = new ListNode(4);
+        ListNode n4 = new ListNode(2);
         ListNode n5 = new ListNode(5);
+        ListNode n6 = new ListNode(2);
         n1.next = n2;
         n2.next = n3;
         n3.next = n4;
         n4.next = n5;
-        n5.next = null;
-        reverseKGroup2(n1, 2);
+        n5.next = n6;
+        n6.next = null;
+        partition(n1, 3);
     }
 }
 
