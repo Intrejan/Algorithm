@@ -134,13 +134,43 @@ public class TreeSolution {
         return node;                                           // 回溯返回根节点
     }
 
+    public TreeNode buildTree2(int[] preorder, int[] inorder) {
+        if (preorder.length == 0) {
+            return null;
+        }
+        int length = preorder.length;
+        int rootOfInorder = 0;
+        TreeNode root = new TreeNode(preorder[0]);
+        for (int i = 0 ;i<length ;i++) {
+            if (inorder[i] == root.val) {
+                rootOfInorder = i;
+            }
+        }
+        int left_l = rootOfInorder;
+        int right_l = length - rootOfInorder - 1;
+        int[] pre_l = new int[left_l];
+        int[] in_l = new int[left_l];
+        for (int i =0;i<left_l;i++) {
+            pre_l[i] = preorder[i+1];
+            in_l[i] = inorder[i];
+        }
+        int[] pre_r = new int[right_l];
+        int[] in_r = new int[right_l];
+        for (int i =0;i<right_l;i++) {
+            pre_r[i] = preorder[i+left_l+1];
+            in_r[i] = inorder[i+left_l+1];
+        }
+        root.left = buildTree2(pre_l,in_l);
+        root.right = buildTree2(pre_r,in_r);
+        return root;
+    }
+
     public static void main(String[] args) {
         TreeSolution treeSolution = new TreeSolution();
         //TreeNode root = treeSolution.buildSortedTree(new int[]{6,3,5,7,2,0,9,11,4});
         TreeNode root = treeSolution.buildTree(new int[]{3, 9, 20, 15, 7}, new int[]{9, 3, 15, 20, 7});
         System.out.println(treeSolution.postorderTraversal(root));
     }
-
 }
 
 class TreeNode {
