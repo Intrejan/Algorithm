@@ -3,7 +3,10 @@ package myTree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
 public class TreeSolution {
 
@@ -141,7 +144,7 @@ public class TreeSolution {
         int length = preorder.length;
         int rootOfInorder = 0;
         TreeNode root = new TreeNode(preorder[0]);
-        for (int i = 0 ;i<length ;i++) {
+        for (int i = 0; i < length; i++) {
             if (inorder[i] == root.val) {
                 rootOfInorder = i;
             }
@@ -150,18 +153,45 @@ public class TreeSolution {
         int right_l = length - rootOfInorder - 1;
         int[] pre_l = new int[left_l];
         int[] in_l = new int[left_l];
-        for (int i =0;i<left_l;i++) {
-            pre_l[i] = preorder[i+1];
+        for (int i = 0; i < left_l; i++) {
+            pre_l[i] = preorder[i + 1];
             in_l[i] = inorder[i];
         }
         int[] pre_r = new int[right_l];
         int[] in_r = new int[right_l];
-        for (int i =0;i<right_l;i++) {
-            pre_r[i] = preorder[i+left_l+1];
-            in_r[i] = inorder[i+left_l+1];
+        for (int i = 0; i < right_l; i++) {
+            pre_r[i] = preorder[i + left_l + 1];
+            in_r[i] = inorder[i + left_l + 1];
         }
-        root.left = buildTree2(pre_l,in_l);
-        root.right = buildTree2(pre_r,in_r);
+        root.left = buildTree2(pre_l, in_l);
+        root.right = buildTree2(pre_r, in_r);
+        return root;
+    }
+
+    public Node connect(Node root) {
+        if (root == null) {
+            return null;
+        }
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                Node node = queue.poll();
+                if (node == null) {
+                    continue;
+                }
+                if (!queue.isEmpty() && i != size - 1) {
+                    node.next = queue.peek();
+                }
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+            }
+        }
         return root;
     }
 
@@ -190,5 +220,27 @@ class TreeNode {
         this.val = val;
         this.left = left;
         this.right = right;
+    }
+}
+
+class Node {
+
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {
+    }
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
     }
 }
