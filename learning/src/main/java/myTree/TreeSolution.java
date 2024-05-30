@@ -196,6 +196,37 @@ public class TreeSolution {
         return root;
     }
 
+    public void flatten(TreeNode root) {
+        List<TreeNode> nodes = new ArrayList<>();
+        pre(root, nodes);
+        for (int i = 0; i < nodes.size() - 1; i++) {
+            TreeNode node = nodes.get(i);
+            node.left = null;
+            node.right = nodes.get(i + 1);
+        }
+    }
+
+    private void pre(TreeNode node, List<TreeNode> nodes) {
+        if (node == null) {
+            return;
+        }
+        nodes.add(node);
+        pre(node.left, nodes);
+        pre(node.right, nodes);
+    }
+
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if (root == null) {
+            return false;
+        }
+        if (root.left == null && root.right == null) {
+            return root.val == targetSum;
+        }
+        return hasPathSum(root.left, targetSum - root.val)
+            || hasPathSum(root.right, targetSum - root.val);
+    }
+
     public static void main(String[] args) {
         TreeSolution treeSolution = new TreeSolution();
         //TreeNode root = treeSolution.buildSortedTree(new int[]{6,3,5,7,2,0,9,11,4});
