@@ -227,6 +227,29 @@ public class TreeSolution {
             || hasPathSum(root.right, targetSum - root.val);
     }
 
+    public int sumNumbers(TreeNode root) {
+        int sum = 0;
+        List<Integer> sums = new ArrayList<>();
+        pre(root, 0, sums);
+        for (Integer s : sums) {
+            sum += s;
+        }
+        return sum;
+    }
+
+    private void pre(TreeNode node, int currSum, List<Integer> sums) {
+        if (node == null) {
+            return;
+        }
+        currSum = currSum * 10 + node.val;
+        if (node.left == null && node.right == null) {
+            sums.add(currSum);
+            return;
+        }
+        pre(node.left, currSum, sums);
+        pre(node.right, currSum, sums);
+    }
+
     public static void main(String[] args) {
         TreeSolution treeSolution = new TreeSolution();
         //TreeNode root = treeSolution.buildSortedTree(new int[]{6,3,5,7,2,0,9,11,4});
