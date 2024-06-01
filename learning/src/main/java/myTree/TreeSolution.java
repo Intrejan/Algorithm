@@ -250,6 +250,41 @@ public class TreeSolution {
         pre(node.right, currSum, sums);
     }
 
+    public int countNodes(TreeNode root) {
+        return pre(root);
+    }
+
+    private int pre(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.left == null && root.right == null) {
+            return 1;
+        }
+        return 1 + pre(root.left) + pre(root.right);
+    }
+
+    private int ans;
+    private int pre;
+    public int getMinimumDifference(TreeNode root) {
+        pre = -1;
+        ans = Integer.MAX_VALUE;
+        in(root);
+        return ans;
+    }
+
+    private void in(TreeNode node) {
+        if (node == null) {
+            return;
+        }
+        in(node.left);
+        if (pre != -1) {
+            ans = Math.min(ans, node.val - pre);
+        }
+        pre = node.val;
+        in(node.right);
+    }
+
     public static void main(String[] args) {
         TreeSolution treeSolution = new TreeSolution();
         //TreeNode root = treeSolution.buildSortedTree(new int[]{6,3,5,7,2,0,9,11,4});
